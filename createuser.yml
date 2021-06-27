@@ -1,6 +1,5 @@
----#!/usr/sbin/useradd
- - name: Create a login user
-     user:
+---
+      user:
       name: ansible
       password: 'Titan$123'
       groups: ansible, sudo   # Empty by default.
