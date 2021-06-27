@@ -1,0 +1,8 @@
+---#!/usr/sbin/useradd
+- hosts: 10.0.10.12
+  tasks:
+  - name: Create a User.
+    user:
+      name: ansible
+      state: present
+      password: Titan$123
