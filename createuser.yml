@@ -1,8 +1,11 @@
 ---#!/usr/sbin/useradd
-- hosts: all
-  tasks:
-  - name: Create a User.
-    user:
+ - name: Create a login user
+     user:
       name: ansible
+      password: 'Titan$123'
+      groups: ansible, sudo   # Empty by default.
       state: present
-      password: Titan$123
+      shell: /bin/bash       # Defaults to /bin/bash
+      system: no             # Defaults to no
+      createhome: yes        # Defaults to yes
+      home: /home/ansible  # Defaults to /home/<username>
