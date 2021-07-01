@@ -1,16 +1,12 @@
-  azure_rm_virtualmachine:
-    resource_group: titanstestvm
-    name: ansibletestvm002
-    vm_size: Standard_B1|s
-    storage_account: titatntest001
-    storage_container: titantestvm001
-    storage_blob: titantestvm001.vhd
-    admin_username: admin
-    ssh_password: false
-    ssh_public_keys: "{{ ansibletestaz.pem }}"
-    network_interfaces: titantestnic001
-    image:
-      offer: CentOS
-      publisher: OpenLogic
-      sku: '7.1'
-      version: latest
+azure_rm_virtualmachine:
+  resource_group: titanstestvm
+  name: titantestvm10
+  vm_size: Standard_B1
+  admin_username: ansibletest
+  ssh_password: false
+  ssh_public_keys: "{{ ssh_keys }}"
+  image:
+    offer: CentOS
+    publisher: OpenLogic
+    sku: '7.1'
+    version: latest
