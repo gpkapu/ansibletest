@@ -1,0 +1,4 @@
+- name: Create Resource Group
+  azure_rm_resourcegroup:
+    name: titantestrg
+    location: eastus
