@@ -4,7 +4,7 @@ azure_rm_virtualmachine:
   vm_size: Standard_B1
   admin_username: ansibletest
   ssh_password: false
-  ssh_public_keys: "{{ ssh_keys }}"
+  ssh_public_keys: "{{ ansibletestaz.pem }}"
   image:
     offer: CentOS
     publisher: OpenLogic
