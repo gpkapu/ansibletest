@@ -1,0 +1,16 @@
+- name: Create virtual machine
+  azure_rm_virtualmachine:
+    resource_group: titanstestvm
+    name: ansibletestvm002
+    vm_size: Standard_B1|s
+    storage_account: titatntest001
+    storage_container: titantestvm001
+    storage_blob: titantestvm001.vhd
+    admin_username: admin
+    admin_password: Titan$123
+    network_interfaces: titantestnic001
+    image:
+      offer: CentOS
+      publisher: OpenLogic
+      sku: '7.1'
+      version: latest
