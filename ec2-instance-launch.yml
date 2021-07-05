@@ -1,12 +1,8 @@
 ---
- -- This play book is to launch new instance
-   ec2: 
-    key_name: Ansible.pem
-    instance_type: t2.micro
-    image: ami-00e87074e52e6c9f9
-    wait: yes
-    vpc_subnet_id: "subnet-0d768c73cb318b8af"
-    security_group: sg-05c19526d2ac47002
-    region: us-east-1
-    group: Ansible 
+Resources:
+  EC2LT4F50A:
+    Type: 'AWS::EC2::LaunchTemplate'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 5ebe31a4-6e2a-4016-8865-2d306b02db19
 
