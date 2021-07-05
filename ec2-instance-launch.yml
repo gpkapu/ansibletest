@@ -4,8 +4,8 @@
   vars:
   gather_facts: False
   vars:
-    keypair: "my-keypair-name"
-    instance_type: m4.large
+    keypair: "Ansible.pem"
+    instance_type: t2.micro
     security_group: 
       - "vpc-group-1"
       - "vpc-group-2"
