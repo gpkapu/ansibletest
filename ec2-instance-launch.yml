@@ -1,6 +1,6 @@
 ---
-- name: starting ec2 instance
-  ec2: 
+ -- This play book is to launch new instance
+   ec2: 
     key_name: Ansible.pem
     instance_type: t2.micro
     image: ami-00e87074e52e6c9f9
