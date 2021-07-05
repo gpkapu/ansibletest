@@ -10,8 +10,8 @@
       - "sg-05c19526d2ac47002"
     image: "ami-00e87074e52e6c9f9"
     region: us-east-1
-    user_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY') }}"
-    user_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    user_access_key: "{{ lookup('env', 'AKIAR6PH3HGSSSL7QDCO') }}"
+    user_secret_key: "{{ lookup('env', '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') }}"
 
   tasks:
     - name: startup new instance
