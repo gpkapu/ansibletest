@@ -1,8 +1,16 @@
 ---
-Resources:
-  EC2LT4F50A:
-    Type: 'AWS::EC2::LaunchTemplate'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 5ebe31a4-6e2a-4016-8865-2d306b02db19
+  - name: Provision an EC2 Instance. Detailed steps by Titan's.
+    hosts: local
+    connection: local
+    gather_facts: False
+    tags: provisioning
+    # required parameters
+    vars:
+      instance_type: t2.micro
+      security_group: sg-05c19526d2ac47002
+      image: ami-00e87074e52e6c9f9
+      keypair: Ansible
+      region: us-east-1 # Change the Region
+      count: 1
 
+ 
