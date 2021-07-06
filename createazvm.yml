@@ -6,7 +6,7 @@
   hosts: localhost
   connection: local
   vars:
-    resource_group: RG-NEBULA
+    resource_group: RG-NEBULA1
     vm_name: testvm
     location: eastus
     azure_rm_virtualnetwork: VNET-NEBULA
