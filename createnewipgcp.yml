@@ -4,7 +4,7 @@
 
   vars:
     service_account_file: /tmp/key_pair/gothic-sylph-318919-bd11b38ccb2a.json
-    project: my-project
+    project: My First Project
     auth_kind: serviceaccount
     scopes:
       - https://www.googleapis.com/auth/compute
