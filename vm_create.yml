@@ -6,7 +6,7 @@
   hosts: localhost
   connection: local
   vars:
-    resource_group: "RG-GALAXY123"
+    resource_group: "RG-NEBULA"
     vm_name: testvm
     location: eastus
   tasks:
