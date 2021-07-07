@@ -1,5 +1,5 @@
 name: Create a GCP instance
-  hosts: localhost
+  hosts: all
   vars:
      gcp_project: ansible-tower-Ajay
      gcp_cred_kind: serviceaccount
