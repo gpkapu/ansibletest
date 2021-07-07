@@ -1,49 +1,62 @@
 --- 
 - 
-  gather_facts: false
   hosts: localhost
-  name: "Create Instances in GCE"
+  name: "Create a GCP instance"
   tasks: 
     - 
-      gce: 
-        disk_size: "{{disk_size}}"
-        image: "{{image}}"
-        instance_names: "{{instance_names}}"
-        machine_type: "{{machine_type}}"
-        preemptible: true
-        state: present
-        tags: "http-server,https-server,cockpit-console"
-        zone: "{{zone}}"
-      name: "Create an Instance based on image \"{{image}}\""
-      register: gce
-    - 
-      gce_pd: 
-        delete_on_termination: true
-        instance_name: "{{instance_names}}"
-        mode: READ_WRITE
-        name: vg-ocp
+      gcp_compute_disk: 
+        auth_kind: "{{ gcp_cred_kind }}"
+        name: disk-instance
+        project: "{{ gcp_project }}"
         size_gb: 20
+        source_image: projects/gothic-sylph-318919/global/images/rhel-8
         state: present
-        zone: "{{zone}}"
-      name: "Add disk to Instance"
+        zone: us-east4-c
+      name: "create a disk mapped from RHEL8 image"
+      register: disk
     - 
-      add_host: 
-        groupname: gce_instances_temp
-        hostname: "{{ item.public_ip }}"
-      name: "Save host data within a Group"
-      with_items: "{{ gce.instance_data }}"
+      gcp_compute_network: 
+        auth_kind: "{{ gcp_cred_kind }}"
+        name: network-instance
+        project: "{{ gcp_project }}"
+        state: present
+      name: "create a  VPC network"
+      register: network
     - 
-      name: "Wait for SSH to come up"
-      wait_for: "host={{ item.public_ip }} port=22 delay=10 timeout=60"
-      with_items: "{{ gce.instance_data }}"
+      gcp_compute_address: 
+        auth_kind: "{{ gcp_cred_kind }}"
+        name: address-instance
+        project: "{{ gcp_project }}"
+        region: us-east4
+        state: present
+      name: "create an IPv4 public IP Address"
+      register: address
     - 
-      name: "setting fact"
-      set_fact: "host={{ item.public_ip }}"
-      with_items: "{{ gce.instance_data }}"
-    - ~
+      gcp_compute_instance: 
+        auth_kind: "{{ gcp_cred_kind }}"
+        disks: 
+          - 
+            auto_delete: "true"
+            boot: "true"
+            source: "{{ disk }}"
+        machine_type: n1-standard-1
+        name: rhel8
+        network_interfaces: 
+          - 
+            access_configs: 
+              - 
+                name: "External NAT"
+                nat_ip: "{{ address }}"
+                type: ONE_TO_ONE_NAT
+            network: "{{ network }}"
+        project: "{{ gcp_project }}"
+        state: present
+        zone: us-east4-c
+      name: "create the RHEL8 instance"
+    - 
+      debug: 
+        msg: "The RHEL8 instance is accessible at {{ address.address }}"
+      name: "Show RHEL8 Instance Details"
   vars: 
-    disk_size: 10
-    image: projects/gothic-sylph-318919/global/images/rhel-8
-    instance_names: ansible-workshop-instance
-    machine_type: g1-small
-    zone: us-east4-c
+    gcp_cred_kind: serviceaccount
+    gcp_project: gothic-sylph-318919
