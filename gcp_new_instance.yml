@@ -62,7 +62,7 @@
   gather_facts: true
   hosts: gce_instances_temp
   name: "Configure Hosts post-creation"
-  remote_user: rcalvaga
+  remote_user: ansible
   tasks: 
     - 
       name: "Install Cockpit Console"
@@ -73,7 +73,7 @@
         name: "{{ item }}"
         state: latest
     - 
-      command: "firewall-cmd --permanent --add-port=9090/tcp"
+      command: "firewall-cmd --permanent --add-port=8080/tcp"
       name: "Firewall Access Rules For Cockpit"
     - 
       name: "Start Cockpit Service"
