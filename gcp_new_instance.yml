@@ -1,0 +1,101 @@
+--- 
+- 
+  connection: local
+  gather_facts: false
+  hosts: localhost
+  name: "Create Instances in GCE"
+  tasks: 
+    - 
+      gce: 
+        disk_size: "{{disk_size}}"
+        image: "{{image}}"
+        instance_names: "{{instance_names}}"
+        machine_type: "{{machine_type}}"
+        preemptible: true
+        state: present
+        tags: "http-server,https-server,cockpit-console"
+        zone: "{{zone}}"
+      name: "Create an Instance based on image \"{{image}}\""
+      register: gce
+    - 
+      gce_pd: 
+        delete_on_termination: true
+        instance_name: "{{instance_names}}"
+        mode: READ_WRITE
+        name: vg-ocp
+        size_gb: 50
+        state: present
+        zone: "{{zone}}"
+      name: "Add disk to Instance"
+    - 
+      add_host: 
+        groupname: gce_instances_temp
+        hostname: "{{ item.public_ip }}"
+      name: "Save host data within a Group"
+      with_items: "{{ gce.instance_data }}"
+    - 
+      name: "Wait for SSH to come up"
+      wait_for: "host={{ item.public_ip }} port=22 delay=10 timeout=60"
+      with_items: "{{ gce.instance_data }}"
+    - 
+      name: "setting fact"
+      set_fact: "host={{ item.public_ip }}"
+      with_items: "{{ gce.instance_data }}"
+    - 
+      gcdns_record: 
+        overwrite: true
+        record: "{{instance_names}}.{{dns_zone}}"
+        type: A
+        value: "{{ host }}"
+        zone: "{{dns_zone}}"
+      name: "Record \"{{instance_names}}\" within \"{{dns_zone}}\""
+  vars: 
+    disk_size: 10
+    dns_zone: workshop.titan1.com
+    image: rhel-7
+    instance_names: ansible-titan-instance
+    machine_type: g1-small
+    zone: us-east4-c
+- 
+  become: true
+  become_method: sudo
+  gather_facts: true
+  hosts: gce_instances_temp
+  name: "Configure Hosts post-creation"
+  remote_user: rcalvaga
+  tasks: 
+    - 
+      name: "Install Cockpit Console"
+      with_items: 
+        - cockpit
+        - cockpit-dashboard
+      yum: 
+        name: "{{ item }}"
+        state: latest
+    - 
+      command: "firewall-cmd --permanent --add-port=9090/tcp"
+      name: "Firewall Access Rules For Cockpit"
+    - 
+      name: "Start Cockpit Service"
+      service: 
+        enabled: true
+        name: cockpit.socket
+        state: started
+    - 
+      name: "install Apache"
+      yum: 
+        name: httpd
+        state: latest
+    - 
+      name: "start Apache Service"
+      service: 
+        enabled: true
+        name: httpd
+        state: started
+    - 
+      name: "create ansible user"
+      user: 
+        comment: "Ansible Workshop"
+        group: wheel
+        name: ansible
+        password: Titan$12345678
