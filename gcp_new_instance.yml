@@ -43,7 +43,7 @@
     - ~
   vars: 
     disk_size: 10
-    image: /compute/imagesDetail/projects/gothic-sylph-318919/global/images/rhel-8
+    image: projects/gothic-sylph-318919/global/images/rhel-8
     instance_names: ansible-workshop-instance
     machine_type: g1-small
     zone: us-east4-c
